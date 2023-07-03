@@ -141,14 +141,19 @@ public class Window {
 	{
 		List<Month> months = new ArrayList<>();
 		
-		List<String> names = Arrays.asList( new String[] {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" } );
 		
-		
-		
-		for( String name: names )
-		{
-			months.add( new Month( name ) );
-		}
+		months.add( new Month( "January", 31 ) );
+		months.add( new Month( "February", 28 ) );
+		months.add( new Month( "March", 31 ) );
+		months.add( new Month( "April", 30 ) );
+		months.add( new Month( "May", 31 ) );
+		months.add( new Month( "June", 30 ) );
+		months.add( new Month( "July", 31 ) );
+		months.add( new Month( "August", 31 ) );
+		months.add( new Month( "September", 30 ) );
+		months.add( new Month( "October", 31 ) );
+		months.add( new Month( "November", 30 ) );
+		months.add( new Month( "December", 31 ) );
 		
 		for( Month each: months )
 		{
