@@ -102,17 +102,28 @@ public class Month {
 		addButton.addActionListener( new ActionListener() {
 			@Override 
 			public void actionPerformed( ActionEvent e ) {
-				addEvent(day);
+				
+				int result = addEvent(day);
+				
+				if( result == JOptionPane.OK_OPTION )
+				{
+					JOptionPane.getRootFrame().dispose();
+					
+					enterDay( day, month );
+				}
+				
 			}
 		});
 		
 		dayPanel.add(addButton);
 		
 		
-		JOptionPane.showConfirmDialog( null, dayPanel, name + " " + String.valueOf(day), JOptionPane.OK_CANCEL_OPTION );
+		int res = JOptionPane.showConfirmDialog( null, dayPanel, name + " " + String.valueOf(day), JOptionPane.OK_CANCEL_OPTION );
+		
+		
 	}
 	
-	public void addEvent(int day)
+	public int addEvent(int day)
 	{
 		
 		JPanel addPanel = new JPanel();
@@ -197,5 +208,7 @@ public class Month {
 			
 			events.get( day ).add( event );
 		}
+		
+		return option;
 	}
 }
