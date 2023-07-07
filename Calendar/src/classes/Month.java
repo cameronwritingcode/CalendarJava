@@ -126,6 +126,7 @@ public class Month {
 	public int addEvent(int day)
 	{
 		
+		
 		JPanel addPanel = new JPanel();
 		DefaultComboBoxModel hourModel = new DefaultComboBoxModel();
 		
