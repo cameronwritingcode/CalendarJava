@@ -39,13 +39,13 @@ public class Month {
 		button.addActionListener( new ActionListener() {
 			@Override
 			public void actionPerformed( ActionEvent e ) {
-				enterMonth();
+				enterMonth(name);
 			}
 			
 		});
 	}
 	
-	public void enterMonth()
+	public void enterMonth(String month)
 	{
 		JPanel monthPanel = new JPanel();
 		GridLayout grid = new GridLayout( 5, 7 );
@@ -58,7 +58,7 @@ public class Month {
 			day.addActionListener( new ActionListener() {
 				@Override
 				public void actionPerformed( ActionEvent e ) {
-					enterDay(d);
+					enterDay(d, month);
 				}
 			});
 			
@@ -68,19 +68,32 @@ public class Month {
 		JOptionPane.showConfirmDialog( null, monthPanel, name, JOptionPane.OK_CANCEL_OPTION );
 	}
 	
-	public void enterDay( int day )
+	public void enterDay( int day, String month )
 	{
 		JPanel dayPanel = new JPanel();
 		BoxLayout box = new BoxLayout(dayPanel, BoxLayout.Y_AXIS);
 		
-		dayPanel.setLayout(box);
+		GridLayout grid = new GridLayout(0, 3);
+		
+		dayPanel.setLayout(grid);
 		
 		if( events.containsKey(day))
 		{
 			for( Event each: events.get( day ) )
 			{
-				JLabel eventLabel = new JLabel( each.eventDetails );
+				JLabel eventLabel = new JLabel( each.getDetail() );
+				
+				Time t1 = each.getTime1();
+				Time t2 = each.getTime2();
+				
+				JLabel t1String = new JLabel( "From " + t1.getHour() + ": " + t1.getMinute() );
+				
+				JLabel t2String = new JLabel( "To " + t2.getHour() + ": " + t2.getMinute() );
+				
+				
 				dayPanel.add( eventLabel );
+				dayPanel.add( t1String );
+				dayPanel.add( t2String );
 			}
 		}
 		
@@ -89,17 +102,17 @@ public class Month {
 		addButton.addActionListener( new ActionListener() {
 			@Override 
 			public void actionPerformed( ActionEvent e ) {
-				addEvent();
+				addEvent(day);
 			}
 		});
 		
 		dayPanel.add(addButton);
 		
 		
-		JOptionPane.showConfirmDialog( null, dayPanel, String.valueOf(day), JOptionPane.OK_CANCEL_OPTION );
+		JOptionPane.showConfirmDialog( null, dayPanel, name + " " + String.valueOf(day), JOptionPane.OK_CANCEL_OPTION );
 	}
 	
-	public void addEvent()
+	public void addEvent(int day)
 	{
 		
 		JPanel addPanel = new JPanel();
@@ -133,13 +146,56 @@ public class Month {
 		
 		addPanel.add( eventDetail );
 		
+		DefaultComboBoxModel hourModel2 = new DefaultComboBoxModel();
 		
-		addPanel.add( new JLabel("Enter Hour: " ) );
+		for( int i = 1; i <= 24; i++ )
+		{
+			hourModel2.addElement( i );
+		}
+			
+		DefaultComboBoxModel minuteModel2 = new DefaultComboBoxModel();
+		
+		for( int i = 0; i <= 60; i++ )
+		{
+			minuteModel2.addElement( i );
+		}
+		
+		JComboBox hourBox2 = new JComboBox( hourModel2 );
+	
+		
+		JComboBox minuteBox2 = new JComboBox( minuteModel2 );
+		
+						
+		
+		addPanel.add( new JLabel("From: " ) );
 		addPanel.add( hourBox );
 		
-		addPanel.add( new JLabel("Enter Minute: " ) );
+		addPanel.add( new JLabel(":" ) );
 		addPanel.add( minuteBox );
+		
+		addPanel.add( new JLabel("To: " ));
+		addPanel.add( hourBox2 );
+		
+		addPanel.add( new JLabel(":" ) );
+		addPanel.add( minuteBox2 );
 
-		JOptionPane.showConfirmDialog( null, addPanel, "Add an Event", JOptionPane.OK_CANCEL_OPTION );
+		int option = JOptionPane.showConfirmDialog( null, addPanel, "Add an Event", JOptionPane.OK_CANCEL_OPTION );
+		
+		if( option == JOptionPane.OK_OPTION )
+		{
+			Time t1 = new Time( hourBox.getSelectedItem().toString(), minuteBox.getSelectedItem().toString() );
+			Time t2 = new Time( hourBox2.getSelectedItem().toString(), minuteBox2.getSelectedItem().toString() );
+			
+			String eventString = eventDetail.getText();
+			
+			Event event = new Event( t1, t2, eventString );
+			
+			if( !events.containsKey(day))
+			{
+				events.put( day, new ArrayList<>() );
+			}
+			
+			events.get( day ).add( event );
+		}
 	}
 }
