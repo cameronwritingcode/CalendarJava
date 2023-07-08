@@ -1,6 +1,13 @@
 package classes;
 
 import java.awt.GridLayout;
+
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -45,6 +52,8 @@ public class Month {
 		});
 	}
 	
+	
+	
 	public void enterMonth(String month)
 	{
 		JPanel monthPanel = new JPanel();
@@ -86,9 +95,9 @@ public class Month {
 				Time t1 = each.getTime1();
 				Time t2 = each.getTime2();
 				
-				JLabel t1String = new JLabel( "From " + t1.getHour() + ": " + t1.getMinute() );
+				JLabel t1String = new JLabel( "From: " + t1.getHour() + ":" + t1.getMinute() );
 				
-				JLabel t2String = new JLabel( "To " + t2.getHour() + ": " + t2.getMinute() );
+				JLabel t2String = new JLabel( "To: " + t2.getHour() + ":" + t2.getMinute() );
 				
 				
 				dayPanel.add( eventLabel );

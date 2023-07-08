@@ -8,6 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,6 +53,39 @@ public class Window {
 		frame.setLocationRelativeTo( null );
 		
 		
+	}
+	
+	public static void createDatabase( String fileName )
+	{
+		String url = "jdbc:sqlite:asdf.db";
+		
+		try {
+			Connection conn = DriverManager.getConnection( url );
+			if( conn != null )
+			{
+				DatabaseMetaData meta = conn.getMetaData();
+				
+			}
+		}catch(SQLException e ) {
+			System.out.println( e.getMessage() );
+		}
+	}
+	
+	public static void createNewTable() {
+		String url = "jdbc:sqlite:asdf.db";
+		
+		String sql = "CREATE TABLE IF NOT EXISTS entries (\n"
+				+ "id integer PRIMARY KEY\n"
+				+ ");";
+		
+		try {
+			Connection conn = DriverManager.getConnection( url );
+			Statement stmnt = conn.createStatement();
+			stmnt.execute(sql);
+				
+		}catch(SQLException e ) {
+			System.out.println( e.getMessage() );
+		}
 	}
 	
 	public void setVisible()
@@ -129,7 +167,6 @@ public class Window {
 
 		eventPanel.add( new JLabel("Enter Year: " ) );
 		eventPanel.add( yearBox );
-		
 		
 		
 		

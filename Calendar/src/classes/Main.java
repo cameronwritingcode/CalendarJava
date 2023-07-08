@@ -11,5 +11,8 @@ public class Main {
 		window.createMonths();
 		
 		window.setVisible();
+		
+		window.createDatabase("SSSIT.db");
+		window.createNewTable();
 	}
 }
