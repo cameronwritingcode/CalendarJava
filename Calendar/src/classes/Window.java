@@ -57,7 +57,7 @@ public class Window {
 	
 	public static void createDatabase( String fileName )
 	{
-		String url = "jdbc:sqlite:asdf.db";
+		String url = "jdbc:sqlite:events.db";
 		
 		try {
 			Connection conn = DriverManager.getConnection( url );
@@ -72,12 +72,14 @@ public class Window {
 	}
 	
 	public static void createNewTable() {
-		String url = "jdbc:sqlite:asdf.db";
 		
 		String sql = "CREATE TABLE IF NOT EXISTS entries (\n"
-				+ "id integer PRIMARY KEY\n"
-				+ ");";
-		
+				+ "detail TEXT,"
+				+ "time1 DATETIME,"
+				+ "time2 DATETIME"
+				+ ")";
+		String url = "jdbc:sqlite:events.db";
+
 		try {
 			Connection conn = DriverManager.getConnection( url );
 			Statement stmnt = conn.createStatement();

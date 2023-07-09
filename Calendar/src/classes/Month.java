@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -32,7 +33,7 @@ public class Month {
 	JButton button;
 	int days;
 	Map<Integer, List<Event>> events;
-	
+	Map< String, Integer > monthTable;
 	
 	
 	public Month( String name, int days )
@@ -41,6 +42,24 @@ public class Month {
 		this.button = new JButton(name);
 		this.days = days;
 		this.events = new HashMap<>();
+		this.monthTable = new HashMap<>()
+				{
+					{
+						put("January", 1);
+						put("February", 2);
+						put("March", 3);
+						put("April", 4);
+						put("May", 5);
+						put("June", 6);
+						put("July", 7);
+						put("August", 8);
+						put("September", 9);
+						put("October", 10);
+						put("November", 11);
+						put("December", 12);
+						
+					}
+				};
 		
 		
 		button.addActionListener( new ActionListener() {
@@ -112,7 +131,7 @@ public class Month {
 			@Override 
 			public void actionPerformed( ActionEvent e ) {
 				
-				int result = addEvent(day);
+				int result = addEvent(month, day);
 				
 				if( result == JOptionPane.OK_OPTION )
 				{
@@ -132,7 +151,7 @@ public class Month {
 		
 	}
 	
-	public int addEvent(int day)
+	public int addEvent(String month, int day)
 	{
 		
 		
@@ -213,10 +232,32 @@ public class Month {
 			
 			if( !events.containsKey(day))
 			{
+				
 				events.put( day, new ArrayList<>() );
 			}
 			
 			events.get( day ).add( event );
+			
+			String sql = "INSERT INTO entries values(?,?,?)";
+			
+			String time1 = "2023-" + monthTable.get(month) + String.valueOf(day) + " " + t1.getHour() + ":" + t1.getMinute();
+			String time2 = "2023-" + monthTable.get(month) + String.valueOf(day) + " " + t2.getHour() + ":" + t2.getMinute();
+
+			String url = "jdbc:sqlite:events.db";
+
+			try {
+				Connection conn = DriverManager.getConnection( url );
+				PreparedStatement stmnt = conn.prepareStatement(sql);
+				stmnt.setString(1, eventString);
+				stmnt.setString(2,  time1);
+				stmnt.setString(3, time2);
+				stmnt.executeUpdate();
+					
+			}catch(SQLException e ) {
+				System.out.println( e.getMessage() );
+			}
+			
+
 		}
 		
 		return option;
