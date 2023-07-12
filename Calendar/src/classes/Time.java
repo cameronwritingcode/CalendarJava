@@ -11,8 +11,6 @@ public class Time {
 		this.minute = t2;
 	}
 	
-	
-	
 	public String getHour()
 	{
 		return hour;

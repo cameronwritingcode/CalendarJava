@@ -61,8 +61,7 @@ public class Month {
 						
 					}
 				};
-		
-		
+	
 		button.addActionListener( new ActionListener() {
 			@Override
 			public void actionPerformed( ActionEvent e ) {
@@ -134,9 +133,6 @@ public class Month {
 			System.out.println( e.getMessage() );
 		}
 		
-		
-		
-		
 		JButton addButton = new JButton("Add Event");
 		
 		addButton.addActionListener( new ActionListener() {
@@ -159,13 +155,11 @@ public class Month {
 		
 		
 		int res = JOptionPane.showConfirmDialog( null, dayPanel, name + " " + String.valueOf(day), JOptionPane.OK_CANCEL_OPTION );
-		
-		
+
 	}
 	
 	public int addEvent(String month, int day)
 	{
-		
 		
 		JPanel addPanel = new JPanel();
 		DefaultComboBoxModel hourModel = new DefaultComboBoxModel();

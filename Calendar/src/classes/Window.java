@@ -27,6 +27,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 
 public class Window {
@@ -37,6 +38,12 @@ public class Window {
 	{
 		frame = new JFrame("Calendar");
 		panel = new JPanel();
+		
+		try { 
+		    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
 		
 		GridLayout grid = new GridLayout( 2, 6 );
 		panel.setLayout( grid );
@@ -182,7 +189,6 @@ public class Window {
 	{
 		List<Month> months = new ArrayList<>();
 		
-		
 		months.add( new Month( "January", 31 ) );
 		months.add( new Month( "February", 28 ) );
 		months.add( new Month( "March", 31 ) );
@@ -200,8 +206,6 @@ public class Window {
 		{
 			panel.add( each.button );
 		}
-		
-	
-		
+
 	}
 }
