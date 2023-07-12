@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -105,25 +106,36 @@ public class Month {
 		
 		dayPanel.setLayout(grid);
 		
-		if( events.containsKey(day))
-		{
-			for( Event each: events.get( day ) )
+		
+		String sql = "SELECT strftime('%H:%M', time1) AS  t1, strftime('%H:%M', time2) as t2, detail FROM entries WHERE month = ? AND day = ?;";
+		
+		String url = "jdbc:sqlite:events.db";
+
+		try {
+			Connection conn = DriverManager.getConnection( url );
+			PreparedStatement stmnt = conn.prepareStatement(sql);
+			stmnt.setString(1, month);
+			stmnt.setString(2, String.valueOf(day));
+
+
+			ResultSet rs = stmnt.executeQuery();
+			while( rs.next() )
 			{
-				JLabel eventLabel = new JLabel( each.getDetail() );
+				JLabel eve1 = new JLabel( rs.getString("detail") );
+				dayPanel.add( eve1 );
 				
-				Time t1 = each.getTime1();
-				Time t2 = each.getTime2();
+				JLabel eve2 = new JLabel(" From: " + rs.getString("t1"));
+				dayPanel.add( eve2 );
 				
-				JLabel t1String = new JLabel( "From: " + t1.getHour() + ":" + t1.getMinute() );
-				
-				JLabel t2String = new JLabel( "To: " + t2.getHour() + ":" + t2.getMinute() );
-				
-				
-				dayPanel.add( eventLabel );
-				dayPanel.add( t1String );
-				dayPanel.add( t2String );
+				JLabel eve3 = new JLabel( " To: " + rs.getString("t2" ) );
+				dayPanel.add( eve3 );
 			}
+		}catch(SQLException e ) {
+			System.out.println( e.getMessage() );
 		}
+		
+		
+		
 		
 		JButton addButton = new JButton("Add Event");
 		
@@ -160,8 +172,12 @@ public class Month {
 		
 		for( int i = 1; i <= 24; i++ )
 		{
-			hourModel.addElement( i );
-		}
+			String s = String.valueOf(i);
+			if( s.length() == 1 )
+			{
+				s = "0" + s;
+			}
+			hourModel.addElement( s );		}
 		
 		JComboBox hourBox = new JComboBox( hourModel );
 		
@@ -169,7 +185,12 @@ public class Month {
 		
 		for( int i = 0; i <= 60; i++ )
 		{
-			minuteModel.addElement( i );
+			String s = String.valueOf(i);
+			if( s.length() == 1 )
+			{
+				s = "0" + s;
+			}
+			minuteModel.addElement( s );
 		}
 		
 		JComboBox minuteBox = new JComboBox( minuteModel );
@@ -190,14 +211,24 @@ public class Month {
 		
 		for( int i = 1; i <= 24; i++ )
 		{
-			hourModel2.addElement( i );
+			String s = String.valueOf(i);
+			if( s.length() == 1 )
+			{
+				s = "0" + s;
+			}
+			hourModel2.addElement( s );
 		}
 			
 		DefaultComboBoxModel minuteModel2 = new DefaultComboBoxModel();
 		
 		for( int i = 0; i <= 60; i++ )
 		{
-			minuteModel2.addElement( i );
+			String s = String.valueOf(i);
+			if( s.length() == 1 )
+			{
+				s = "0" + s;
+			}
+			minuteModel2.addElement( s );
 		}
 		
 		JComboBox hourBox2 = new JComboBox( hourModel2 );
@@ -238,11 +269,19 @@ public class Month {
 			
 			events.get( day ).add( event );
 			
-			String sql = "INSERT INTO entries values(?,?,?)";
+			String sql = "INSERT INTO entries values(?,?,?,?,?)";
 			
-			String time1 = "2023-" + monthTable.get(month) + String.valueOf(day) + " " + t1.getHour() + ":" + t1.getMinute();
-			String time2 = "2023-" + monthTable.get(month) + String.valueOf(day) + " " + t2.getHour() + ":" + t2.getMinute();
+			String dayString = String.valueOf( day );
+			String monthString = String.valueOf(monthTable.get(month));
+			if( dayString.length() == 1 ) dayString = "0" + dayString;
+			if( monthString.length() == 1 ) monthString = "0" + monthString;
 
+			String time1 = "2023-" + monthString + "-" + dayString + " " + t1.getHour() + ":" + t1.getMinute() + ":00";
+			String time2 = "2023-" + monthString + "-" + dayString + " " + t2.getHour() + ":" + t2.getMinute() + ":00";
+			System.out.println(time1);
+			
+			String mon = month;
+			String d = String.valueOf(day);
 			String url = "jdbc:sqlite:events.db";
 
 			try {
@@ -251,6 +290,8 @@ public class Month {
 				stmnt.setString(1, eventString);
 				stmnt.setString(2,  time1);
 				stmnt.setString(3, time2);
+				stmnt.setString(4, mon);
+				stmnt.setString(5, d);
 				stmnt.executeUpdate();
 					
 			}catch(SQLException e ) {

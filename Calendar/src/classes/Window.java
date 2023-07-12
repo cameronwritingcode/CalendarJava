@@ -73,11 +73,13 @@ public class Window {
 	
 	public static void createNewTable() {
 		
-		String sql = "CREATE TABLE IF NOT EXISTS entries (\n"
+		String sql = "CREATE TABLE IF NOT EXISTS entries ("
 				+ "detail TEXT,"
 				+ "time1 DATETIME,"
-				+ "time2 DATETIME"
-				+ ")";
+				+ "time2 DATETIME,"
+				+ "month TEXT,"
+				+ "day TEXT"
+				+ ");";
 		String url = "jdbc:sqlite:events.db";
 
 		try {
