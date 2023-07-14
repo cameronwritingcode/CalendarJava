@@ -37,17 +37,23 @@ public class Month {
 	Map< String, Integer > monthTable;
 	private JButton lastButton = null;
 	List<Day> dayList;
+	JPanel monthPanel;
+	GridLayout grid;
 	
 	/*
 	 * Month Constructor.
 	 * Input Parameters: name of month, days of month
+	 * Prepares list of days for the month
 	 */
 	public Month( String name, int days )
 	{
+		this.grid = new GridLayout( 5, 7 );
 		this.name = name;
 		this.button = new JButton(name);
 		this.days = days;
 		this.events = new HashMap<>();
+		this.monthPanel = new JPanel();
+		this.monthPanel.setLayout( grid );
 		this.monthTable = new HashMap<>()
 				{
 					{
@@ -63,7 +69,7 @@ public class Month {
 						put("October", 10);
 						put("November", 11);
 						put("December", 12);
-						
+
 					}
 				};
 	
@@ -83,23 +89,20 @@ public class Month {
 			dayList.add(d);
 
 		}
-	}
-	
-	
-	/*
-	 * creates and opens a month panel
-	 */
-	public void enterMonth(String month)
-	{
-		JPanel monthPanel = new JPanel();
-		GridLayout grid = new GridLayout( 5, 7 );
-		monthPanel.setLayout( grid );
-
+		
 		for( Day each: dayList )
 		{
 			monthPanel.add(each.button);
 		}
-		
+	}
+	
+	
+	/*
+	 * Opens the month panel
+	 */
+	public void enterMonth(String month)
+	{
+
 		JOptionPane.showConfirmDialog( null, monthPanel, name, JOptionPane.OK_CANCEL_OPTION );
 	}
 	
