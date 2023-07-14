@@ -81,6 +81,7 @@ public class Window {
 	public static void createNewTable() {
 		
 		String sql = "CREATE TABLE IF NOT EXISTS entries ("
+				+ "id INTEGER PRIMARY KEY UNIQUE,"
 				+ "detail TEXT,"
 				+ "time1 DATETIME,"
 				+ "time2 DATETIME,"

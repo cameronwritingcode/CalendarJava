@@ -35,6 +35,7 @@ public class Month {
 	int days;
 	Map<Integer, List<Event>> events;
 	Map< String, Integer > monthTable;
+	private JButton lastButton = null;
 	
 	
 	public Month( String name, int days )
@@ -101,12 +102,17 @@ public class Month {
 		JPanel dayPanel = new JPanel();
 		BoxLayout box = new BoxLayout(dayPanel, BoxLayout.Y_AXIS);
 		
-		GridLayout grid = new GridLayout(0, 3);
+		GridLayout grid = new GridLayout(0, 1);
 		
 		dayPanel.setLayout(grid);
 		
+		ActionListener listener = e -> {
+			lastButton =  (JButton) e.getSource();
+			System.out.println("new source: " + lastButton.getName());
+		};
 		
-		String sql = "SELECT strftime('%H:%M', time1) AS  t1, strftime('%H:%M', time2) as t2, detail FROM entries WHERE month = ? AND day = ?;";
+		
+		String sql = "SELECT id AS id, strftime('%H:%M', time1) AS  t1, strftime('%H:%M', time2) as t2, detail FROM entries WHERE month = ? AND day = ?;";
 		
 		String url = "jdbc:sqlite:events.db";
 
@@ -120,20 +126,28 @@ public class Month {
 			ResultSet rs = stmnt.executeQuery();
 			while( rs.next() )
 			{
-				JLabel eve1 = new JLabel( rs.getString("detail") );
-				dayPanel.add( eve1 );
+				String text = rs.getString("detail") + " From: " + rs.getString("t1") + " To: " + rs.getString("t2" );
+				int id = rs.getInt("id");
+				MyButton button = new MyButton(id, text);
+				JButton newButton = new JButton(text);
+				newButton.setName(String.valueOf(id));
+				System.out.println("id: " + String.valueOf(id));
+				newButton.addActionListener(listener);
 				
-				JLabel eve2 = new JLabel(" From: " + rs.getString("t1"));
-				dayPanel.add( eve2 );
 				
-				JLabel eve3 = new JLabel( " To: " + rs.getString("t2" ) );
-				dayPanel.add( eve3 );
+				
+				dayPanel.add(newButton);
+				
+				
 			}
 		}catch(SQLException e ) {
 			System.out.println( e.getMessage() );
 		}
 		
 		JButton addButton = new JButton("Add Event");
+		
+		JButton removeButton = new JButton("Remove Event");
+
 		
 		addButton.addActionListener( new ActionListener() {
 			@Override 
@@ -151,7 +165,42 @@ public class Month {
 			}
 		});
 		
+		removeButton.addActionListener( new ActionListener() {
+			@Override
+			public void actionPerformed( ActionEvent e ) {
+				
+
+				try {
+					String sql = "DELETE FROM entries WHERE id = ?;";
+					
+					String idString = "";
+					if( lastButton != null )
+					{
+						idString = lastButton.getName();
+					}
+					System.out.println(idString);
+					
+					String url = "jdbc:sqlite:events.db";
+					Connection conn = DriverManager.getConnection( url );
+					PreparedStatement stmnt = conn.prepareStatement(sql);
+					stmnt.setString(1, idString);
+					stmnt.executeUpdate();
+					
+					JOptionPane.getRootFrame().dispose();
+					
+					enterDay( day, month );
+					
+					
+				}
+				catch(SQLException e1 ) {
+					System.out.println( e1.getMessage() );
+				}
+					
+			}
+		});
+		
 		dayPanel.add(addButton);
+		dayPanel.add(removeButton);
 		
 		
 		int res = JOptionPane.showConfirmDialog( null, dayPanel, name + " " + String.valueOf(day), JOptionPane.OK_CANCEL_OPTION );
@@ -263,7 +312,7 @@ public class Month {
 			
 			events.get( day ).add( event );
 			
-			String sql = "INSERT INTO entries values(?,?,?,?,?)";
+			String sql = "INSERT INTO entries values(NULL,?,?,?,?,?)";
 			
 			String dayString = String.valueOf( day );
 			String monthString = String.valueOf(monthTable.get(month));
