@@ -49,6 +49,7 @@ public class HomeWindow {
 		}
 		
 		GridLayout grid = new GridLayout( 2, 6 );
+
 		panel.setLayout( grid );
 		
 		frame.setSize(1000, 600);
@@ -57,9 +58,7 @@ public class HomeWindow {
 		JLabel label = new JLabel( "Calendar", SwingConstants.CENTER );
 			
 		frame.add( panel, BorderLayout.CENTER );
-		
-		
-		
+
 		frame.setLocationRelativeTo( null );
 		
 		
