@@ -108,8 +108,6 @@ public class Day {
 				newButton.setName(String.valueOf(id));
 				newButton.addActionListener(listener);
 				
-				
-				
 				dayPanel.add(newButton);
 				
 				
