@@ -7,6 +7,9 @@ public class Event {
 	Time time2;
 	String detail;
 	
+	/*
+	 * Event constructor
+	 */
 	public Event(Time time1, Time time2, String detail )
 	{
 		this.time1 = time1;

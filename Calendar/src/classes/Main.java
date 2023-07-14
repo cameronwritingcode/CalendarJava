@@ -2,17 +2,16 @@ package classes;
 
 public class Main {
 
+	/*
+	 * Create an instance of Home Window
+	 * and call its methods.
+	 */
 	public static void main( String[] args )
 	{
-		Window window = new Window();
+		HomeWindow home = new HomeWindow();
 		
-		//window.addEventButton();
-		
-		window.createMonths();
-		
-		window.setVisible();
-		
-		window.createDatabase("SSSIT.db");
-		window.createNewTable();
+		home.createMonths();
+		home.setVisible();		
+		home.createNewTable();
 	}
 }

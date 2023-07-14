@@ -30,11 +30,14 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 
-public class Window {
+public class HomeWindow {
 
 	JFrame frame;
 	JPanel panel;
-	public Window()
+	/*
+	 * Constructor for the HomeWindow
+	 */
+	public HomeWindow()
 	{
 		frame = new JFrame("Calendar");
 		panel = new JPanel();
@@ -61,23 +64,10 @@ public class Window {
 		
 		
 	}
-	
-	public static void createDatabase( String fileName )
-	{
-		String url = "jdbc:sqlite:events.db";
-		
-		try {
-			Connection conn = DriverManager.getConnection( url );
-			if( conn != null )
-			{
-				DatabaseMetaData meta = conn.getMetaData();
-				
-			}
-		}catch(SQLException e ) {
-			System.out.println( e.getMessage() );
-		}
-	}
-	
+
+	/*
+	 * Create SQLite Table
+	 */
 	public static void createNewTable() {
 		
 		String sql = "CREATE TABLE IF NOT EXISTS entries ("
@@ -100,92 +90,20 @@ public class Window {
 		}
 	}
 	
+	/*
+	 * make JFrame visible to user
+	 */
 	public void setVisible()
 	{
 		frame.setVisible(true);
 	}
 	
-	public void addEventButton()
-	{
-		JButton addEvent = new JButton("Add event");
-		addEvent.setSize(30,10);
-		
-		addEvent.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed( ActionEvent e ) {
-				System.out.println("click");
-				
-				createNewEvent();
-			}
-
-		});
-		
-		panel.add(addEvent);
-	}
 	
-	public void createNewEvent()
-	{
-		JPanel eventPanel = new JPanel();
-		DefaultComboBoxModel dateModel = new DefaultComboBoxModel();
-		
-		for( int i = 1; i <= 30; i++ )
-		{
-			dateModel.addElement( i );
-		}
-		
-		JComboBox dateBox = new JComboBox( dateModel );
-		
-		DefaultComboBoxModel monthModel = new DefaultComboBoxModel();
-		
-		for( int i = 1; i <= 12; i++ )
-		{
-			monthModel.addElement( i );
-		}
-		
-		DefaultComboBoxModel yearModel = new DefaultComboBoxModel();
-		
-		for( int i = 2023; i <= 2100; i++ )
-		{
-			yearModel.addElement( i );
-		}
-		
-		JComboBox yearBox = new JComboBox( yearModel );
-		
-		
-		JComboBox monthBox = new JComboBox( monthModel );
-		
-		eventPanel.setLayout( new BoxLayout( eventPanel, BoxLayout.Y_AXIS ) );
-		
-		
-		JTextField eventDetail = new JTextField( "What is the event?" );
-		
-		eventDetail.addMouseListener( new MouseAdapter() {
-			
-			@Override
-			public void mouseClicked( MouseEvent e ) {
-				eventDetail.setText("");
-			}
-		});
-		
-		eventPanel.add( eventDetail );
-		
-		
-		eventPanel.add( new JLabel("Enter Month: " ) );
-		eventPanel.add( monthBox );
-		
-		eventPanel.add( new JLabel("Enter Date: " ) );
-		eventPanel.add( dateBox );
-
-		eventPanel.add( new JLabel("Enter Year: " ) );
-		eventPanel.add( yearBox );
-		
-		
-		
-		
-		JOptionPane.showConfirmDialog(null, eventPanel, "Create Event", JOptionPane.OK_CANCEL_OPTION );
-	}
 	
+
+	/*
+	 * create months instances which will be placed as buttons on the HomeWindow
+	 */
 	public void createMonths()
 	{
 		List<Month> months = new ArrayList<>();
